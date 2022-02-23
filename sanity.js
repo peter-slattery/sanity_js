@@ -4,6 +4,39 @@
 // 
 // LICENSE AT END
 //
+// DOCUMENTATION (copied from the help output)
+//
+// sanity.js <root_dir> <config_file>
+//   root_dir: sanity.js iterates recursively through all
+//             files and folders within this directory
+//             looking for test files. By default, test
+//             files end in the extension .test.js
+//   config_file: (optional) a javascript file which
+//                exports a single object containing
+//                various config options
+// 
+// sanity.js relies on no 3rd party dependencies and tests
+// run through sanity require no imports. The only
+// dependencies sanity.js relies on are fs and path.However,
+// sanity.js can most likely be run in node with any flags
+// set.
+// 
+// Command Line Examples:
+//   node sanity.js ./src/
+//   node sanity.js ~/path/to/project ~/path/to/project/sanity_config.js
+//   node sanity.js ./project ../sanity_config.js
+// 
+// == TEST FILES ==
+// Test files should look like the following example:
+//   example.test.js
+//     module.exports = { tests: [
+//       {
+//         desc: \"Test Name\",
+//         proc: (env) => { env.expect(true); },
+//       },
+//       // ... more tests here
+//     ]};
+//
 
 const fs = require("fs");
 const path = require("path");
@@ -110,17 +143,24 @@ function findTestFiles (rootDir, config) {
   return result;
 }
 
-function runTests(file, tests, env) {
+async function runTests(file, tests, env) {
   Log(`======= ${LOG_GREEN}${file}${LOG_RESET} =========`);
   
-  env.config.runBeforeFile(file, tests, env);
+  if (env.config.runBeforeFile) {
+    await env.config.runBeforeFile(file, tests, env);
+  }
+  
   for (let i = 0; i < tests.length; i++) {
     let t = tests[i];
     
     env.testPrepare();
-    env.config.runBeforeTest(file, t, env);    
+    if (env.config.runBeforeTest) {
+      await env.config.runBeforeTest(file, t, env);    
+    }
     t.proc(env);
-    env.config.runAfterTest(file, t, env);
+    if (env.config.runAfterTest) {
+      await env.config.runAfterTest(file, t, env);
+    }
     
     // Printing Results
     let result = env.perTest.failed === 0;
@@ -139,7 +179,9 @@ function runTests(file, tests, env) {
     
     env.testCleanup();
   }
-  env.config.runAfterFile(file, tests, env);
+  if (env.config.runAfterFile) {
+    await env.config.runAfterFile(file, tests, env);
+  }
   
   return env;
 }
@@ -180,7 +222,7 @@ function printUsage () {
   Log("");
 }
 
-function run() {
+async function run() {
   
   // Parsing Arguments
   const args = process.argv;
@@ -247,17 +289,17 @@ function run() {
   // Perform All Tests
   const env = new TestEnv(config);
   let invalidTestFiles = [];
-  if (env.config.runBeforeAll) env.config.runBeforeAll(env);
+  if (env.config.runBeforeAll) await env.config.runBeforeAll(env);
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
     const { tests } = require(file);
     if (tests) {
-      runTests(file, tests, env);
+      await runTests(file, tests, env);
     } else {
       invalidTestFiles.push(file);      
     }
   }
-  if (env.config.runAfterAll) env.config.runAfterAll(env);
+  if (env.config.runAfterAll) await env.config.runAfterAll(env);
   
   // Results Reporting
   Log(`Total Passed/Failed: (${env.passed}/${env.failed})`);

@@ -2,6 +2,8 @@
 
 sanity.js is a small javascript testing utility, written in the style of the [STB libraries](https://github.com/nothings/stb/blob/master/docs/stb_howto.txt).
 
+Because sanity.js relies on no 3rd party libraries, no advanced language features, or external services, and is less than 300 lines of code, it runs quicker than other testing libraries while providing enough functionality to cover most use cases. Its size also makes it easy to maintain. And finally, it isn't meant to be pulled from a package manager - you should own the code for this library in your project. It is small enough for you to edit as you need to better fit your project.
+
 ## Usage
 
 ```bash
@@ -39,6 +41,8 @@ module.exports = {
 ## Example Config File
 
 *Note: this is actually the default config that is used if you do not pass one in.*
+
+Callbacks specified in the config object can be asyncronous. The test routines will `await` call them to ensure they complete before proceeding.
 
 ```javascript
 
