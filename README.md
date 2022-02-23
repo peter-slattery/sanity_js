@@ -19,7 +19,8 @@ The test function receives an `env` argument which supplies all testing function
 
 ### Env Object
 
-- `expect(value)`  - takes in a value which is considered to have passed if it is not undefined, null, false, or 0. Failed expect's are reported in the application output
+- `expect(value)`  - takes in a value which is considered to have passed if it is not undefined, null, false, or 0. Failed expect's are reported in the application output. Any given test may have as few or as man expect calls in it as you want. 
+  **NOTE:**A test with no expects in it is considered to have passed.
 
 ### Example Test File
 
@@ -39,11 +40,15 @@ module.exports = {
 
 *Note: this is actually the default config that is used if you do not pass one in.*
 
-```
+```javascript
 
 module.exports = {
 	// determines which files will be treated as though they have tests in them
     testFileExtension: ".test.js",
+    
+    // these are run before and after all tests have run, respectively
+    runBeforeAll:  (env) => {},
+	runAfterAll:   (env) => {},
     
     // these functions are run before and after all tests in a file have been performed, repsectively, 
     runBeforeFile: (file, tests, env) => {},

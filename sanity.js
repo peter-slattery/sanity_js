@@ -73,6 +73,8 @@ class TestEnv {
 
 const defaultConfig = {
   testFileExtension: ".test.js",
+  runBeforeAll:  (env) => {},
+  runAfterAll:   (env) => {},
   runBeforeFile: (file, tests, env) => {},
   runAfterFile:  (file, tests, env) => {},
   runBeforeTest: (file, test, env) => {},
@@ -245,6 +247,7 @@ function run() {
   // Perform All Tests
   const env = new TestEnv(config);
   let invalidTestFiles = [];
+  if (env.config.runBeforeAll) env.config.runBeforeAll(env);
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
     const { tests } = require(file);
@@ -254,6 +257,7 @@ function run() {
       invalidTestFiles.push(file);      
     }
   }
+  if (env.config.runAfterAll) env.config.runAfterAll(env);
   
   // Results Reporting
   Log(`Total Passed/Failed: (${env.passed}/${env.failed})`);
