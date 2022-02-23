@@ -28,10 +28,10 @@ The test function receives an `env` argument which supplies all testing function
 module.exports = { 
 	tests: [
 		{
-        	desc: "Test Name",
-        	proc: (env) => { env.expect(true); },
+			desc: "Test Name",
+			proc: (env) => { env.expect(true); },
 		},
-  		// ... more tests here
+		// ... more tests here
 	]
 };
 ```
@@ -47,7 +47,7 @@ module.exports = {
     testFileExtension: ".test.js",
     
     // these are run before and after all tests have run, respectively
-    runBeforeAll:  (env) => {},
+	runBeforeAll:  (env) => {},
 	runAfterAll:   (env) => {},
     
     // these functions are run before and after all tests in a file have been performed, repsectively, 
