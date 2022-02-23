@@ -26,13 +26,13 @@ The test function receives an `env` argument which supplies all testing function
 
 ```javascript
 module.exports = { 
-	tests: [
-		{
-			desc: "Test Name",
-			proc: (env) => { env.expect(true); },
-		},
-		// ... more tests here
-	]
+  tests: [
+    {
+      desc: "Test Name",
+      proc: (env) => { env.expect(true); },
+    },
+    // ... more tests here
+  ]
 };
 ```
 
@@ -43,20 +43,20 @@ module.exports = {
 ```javascript
 
 module.exports = {
-	// determines which files will be treated as though they have tests in them
-    testFileExtension: ".test.js",
+  // determines which files will be treated as though they have tests in them
+  testFileExtension: ".test.js",
+
+  // these are run before and after all tests have run, respectively
+  runBeforeAll:  (env) => {},
+  runAfterAll:   (env) => {},
+	
+  // these functions are run before and after all tests in a file have been performed, repsectively, 
+  runBeforeFile: (file, tests, env) => {},
+  runAfterFile:  (file, tests, env) => {},
     
-    // these are run before and after all tests have run, respectively
-	runBeforeAll:  (env) => {},
-	runAfterAll:   (env) => {},
-    
-    // these functions are run before and after all tests in a file have been performed, repsectively, 
-    runBeforeFile: (file, tests, env) => {},
-    runAfterFile:  (file, tests, env) => {},
-    
-    // these functions will be run before and after each test is run, respectively
-    runBeforeTest: (file, test, env) => {},
-    runAfterTest:  (file, test, env) => {},
+  // these functions will be run before and after each test is run, respectively
+  runBeforeTest: (file, test, env) => {},
+  runAfterTest:  (file, test, env) => {},
 };
 
 ```
