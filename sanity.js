@@ -26,7 +26,8 @@
 //   node sanity.js ~/path/to/project ~/path/to/project/sanity_config.js
 //   node sanity.js ./project ../sanity_config.js
 // 
-// == TEST FILES ==
+// TEST FILES
+// 
 // Test files should look like the following example:
 //   example.test.js
 //     module.exports = { tests: [
@@ -36,6 +37,15 @@
 //       },
 //       // ... more tests here
 //     ]};
+//
+// VERSION HISTORY
+// 
+// 1.0
+//  * basic testing functionality
+//
+// CONTRIBUTORS
+// 
+// Peter Slattery
 //
 
 const fs = require("fs");
